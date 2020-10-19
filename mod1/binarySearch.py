@@ -1,6 +1,3 @@
-import math
-
-
 # searches for specified item in chosen collection
 def binary_search(item, collection):
     lower_bound = 0
@@ -8,7 +5,7 @@ def binary_search(item, collection):
 
     while lower_bound <= upper_bound:
 
-        mid = math.floor((lower_bound + upper_bound) / 2)
+        mid = (lower_bound + upper_bound) // 2
 
         if collection[mid] == item:
             return mid
