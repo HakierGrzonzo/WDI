@@ -3,7 +3,7 @@
 elementów w posegregowanych zbiorach. Cechuje się złożonością czasową ***O*(log<sub>2</sub>n)**,
 podczas gdy wyszukiwanie liniowe (element po elemencie), ma złożoność *O*(n).
 >*Prosty wykres ukazujący zależność czasu wyszukiwania od ilości elementów w danym zbiorze
-dla wyszkiwania liniowego (czerwony) oraz binarnego (niebieski)*
+dla wyszkiwania liniowego oraz binarnego*
 ![Image](https://cdn.kastatic.org/ka-perseus-graphie/3d79e6ce2ddfed0d66917d585511f807797652fe.svg)
 >
 ## Zasada działania
