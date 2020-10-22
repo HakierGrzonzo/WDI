@@ -127,3 +127,17 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+mod1/prezentacja.aux
+mod1/prezentacja.dvi
+mod1/prezentacja.fdb_latexmk
+mod1/prezentacja.fls
+mod1/prezentacja.nav
+mod1/prezentacja.out
+mod1/prezentacja.snm
+mod1/prezentacja.toc
+mod1/_minted-prezentacja/4ADA8AD802F1BC802F1A8ED5601770FE0F959C2FCCE1FB30F39C7AA58527E0A7.pygtex
+mod1/_minted-prezentacja/A2EA163CA2159704DD5E06BA38EE021F0F959C2FCCE1FB30F39C7AA58527E0A7.pygtex
+mod1/_minted-prezentacja/D41D8CD98F00B204E9800998ECF8427E0F959C2FCCE1FB30F39C7AA58527E0A7.pygtex
+mod1/_minted-prezentacja/D41D8CD98F00B204E9800998ECF8427E8C12A550B2D611174282CE20EAF80EE9.pygtex
+mod1/_minted-prezentacja/default-pyg-prefix.pygstyle
+mod1/_minted-prezentacja/default.pygstyle

@@ -1,0 +1,86 @@
+\documentclass{beamer}
+	\usepackage{inputenc}[utf8]
+	\usepackage{mdframed}
+	\usepackage{graphicx}
+	\usepackage{amsmath}
+	\usepackage{amsfonts}
+    \usepackage{polski}
+    \usepackage[polish]{babel} 
+    \usepackage{indentfirst}
+    \usepackage{icomma}
+    \usepackage{minted}
+    \brokenpenalty=1000
+    \clubpenalty=1000
+    \widowpenalty=1000    
+
+    \newcommand{\obrazek}[2]{
+        \begin{figure}[h]
+            \centering
+            \includegraphics[scale=#1]{#2}
+        \end{figure}
+    }     
+            
+    
+    \newcommand{\twierdzonko}[1]{
+        \begin{center}
+        \begin{mdframed}
+        #1
+        \end{mdframed}          
+        \end{center}
+    } 
+    \usetheme{Boadilla}
+    \title{Algorytmy}
+    \author{Grzegorz Koperwas \and Mateusz Randak \and Piotr Kołodziejski}
+    \date{\today}
+
+\begin{document}
+    \begin{frame}
+        \titlepage
+    \end{frame}
+    \section{Czym jest algorytm?}
+    \begin{frame}
+        \frametitle{Czym jest algorytm?}
+    \end{frame}
+    \section{Wyszukiwanie binarne}
+    \begin{frame}
+        \frametitle{Wyszukiwanie binarne:}
+        \emph{Wyszukiwanie binarne} - algorytm stosowany do wyszukiwania
+        elementów w posegregowanych zbiorach. Cechuje się złożonością czasową $O \left(\log_2 n \right)$, podczas gdy wyszukiwanie liniowe (element po elemencie), ma złożoność $O \left( n \right)$.
+    \end{frame}
+    \begin{frame}
+        \frametitle{Zasada działania}
+        Główną ideą wyszukiwania binarnego jest podział elementów w przeszukiwanym uporządkowanym zbiorze danych
+        (np. tablicy) na coraz to mniejsze zbiory, tak by optymalnie ograniczyć zakres poszukiwania.
+        Należy zaznaczyć, że elementy muszą być ze sobą \emph{porównywalne}, tzn. spośrod dowolnych dwóch elementów
+        da się wyłonić większy i mniejszy (ew.~równy), np. po wartości lub nazwie.
+
+        \begin{enumerate}
+            \item gdy środkowy element jest mniejszy od szukanej, za dolną granicę uznaje się kolejny element, a górna pozostaje bez zmian
+            \item gdy środkowy element jest większy od szukanej, za górną granicę uznaje się poprzedni element,
+            a dolna pozostaje bez zmian
+        \end{enumerate}
+
+        Następnie powyższe kroki zostają powtórzone. Jeżeli element nie zostanie znaleziony,
+        zwracana jest odpowiednia wartość wskazująca na błąd (np. $-1$ lub $null$).
+    \end{frame}
+        \begin{minted}{python}
+# searches for specified item in chosen collection
+def binary_search(item, collection):
+    lower_bound = 0
+    upper_bound = len(collection) - 1
+
+    while lower_bound <= upper_bound:
+        mid = (lower_bound + upper_bound) // 2
+
+        if collection[mid] == item:
+            return mid
+
+        if collection[mid] < item:
+            lower_bound = mid + 1
+        else:
+            upper_bound = mid - 1
+
+    # if item not found
+    return -1
+        \end{minted}
+\end{document}
