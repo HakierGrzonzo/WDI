@@ -10,7 +10,7 @@ dla wyszkiwania liniowego oraz binarnego*
 Główną ideą wyszukiwania binarnego jest podział elementów w przeszukiwanym uporządkowanym zbiorze danych
 (np. tablicy) na coraz to mniejsze zbiory, tak by optymalnie ograniczyć zakres poszukiwania.
 Należy zaznaczyć, że elementy muszą być ze sobą **porównywalne**, tzn. spośrod dowolnych dwóch elementów
-da się wyłonić większy i mniejszy (np. po wartości lub nazwie).
+da się wyłonić większy i mniejszy (ew. równy), np. po wartości lub nazwie.
 
 Algorytm znajduje środkowy element tablicy (lub pierwszy z pary środkowych elementów)
 i porównuje go z poszukiwanym. Jeżeli są sobie równe, to poszukiwanie zostaje zakończone,
