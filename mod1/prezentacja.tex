@@ -9,10 +9,11 @@
     \usepackage{indentfirst}
     \usepackage{icomma}
     \usepackage{minted}
+    \usepackage{ragged2e}
     \brokenpenalty=1000
     \clubpenalty=1000
     \widowpenalty=1000    
-
+    \apptocmd{\frame}{}{\justifying}{} % Allow optional arguments after frame.
     \newcommand{\obrazek}[2]{
         \begin{figure}[h]
             \centering
@@ -28,7 +29,7 @@
         \end{mdframed}          
         \end{center}
     } 
-    \usetheme{Boadilla}
+    \usetheme{Warsaw}
     \title{Algorytmy}
     \author{Grzegorz Koperwas \and Mateusz Randak \and Piotr Kołodziejski}
     \date{\today}
@@ -40,6 +41,16 @@
     \section{Czym jest algorytm?}
     \begin{frame}
         \frametitle{Czym jest algorytm?}
+        \begin{block}{Definicja}
+            \emph{Algorytm} to zestaw instrukcji opisujących krok po kroku jak wykonać pewne zadanie.   
+        \end{block}
+        Mamy z nimi do czynienia w codziennym życiu wykonując różne czynności według pewnych schematów. Przykładowo gdy gotujemy i podążamy za pewnym przepisem.
+
+        Algorytmy odgrywają niezwykle ważną rolę w informatyce. Są one potrzebne do optymalizacji oprogramowania, tak aby działało jak najefektywniej. Specyficznnym rodzajem algorytmów są algorytmy rekurencyjne. 
+
+        \begin{block}{Definicja}
+            \emph{Rekurencja} polega na odwołaniu się funkcji do samej siebie.
+        \end{block}
     \end{frame}
     \section{Wyszukiwanie binarne}
     \begin{frame}
@@ -63,7 +74,7 @@
         Następnie powyższe kroki zostają powtórzone. Jeżeli element nie zostanie znaleziony,
         zwracana jest odpowiednia wartość wskazująca na błąd (np. $-1$ lub $null$).
     \end{frame}
-        \begin{minted}{python}
+    \begin{minted}[fontsize=\small]{python}
 # searches for specified item in chosen collection
 def binary_search(item, collection):
     lower_bound = 0
@@ -81,6 +92,42 @@ def binary_search(item, collection):
             upper_bound = mid - 1
 
     # if item not found
-    return -1
-        \end{minted}
+    raise Exception("not found")
+    \end{minted}
+    \section{Quicksort}
+    \begin{frame}
+        \frametitle{Quicksort:}
+            Quicksort to rekurencyjny algorytm sortujący, działający poprzez dzielenie początkowego zbioru na coraz mniejsze podzbiory. 
+            \vspace{5mm}
+
+            Działanie:
+            \begin{enumerate}
+                \item Wybierz element z \emph{danego zbioru}, zwany \emph{elementem rozdzielajączym.}
+                \item Elementy mniejsze od \emph{elementu rozdzielającego} przenieś do zbioru $A$, większe do $C$, a równe do $B$.
+                \item Posortuj zbiory $A$ i $C$ quicksortem.
+                \item Wynikiem jest połączenie zbiorów $A + B + C$.
+            \end{enumerate}
+    \end{frame}
+    \begin{minted}[fontsize=\small]{python}
+def quicksort(zbiór):
+    if len(zbiór) <= 1:
+        # nie trzeba sortować zbiorów pustych 
+        return zbiór
+    else:
+        element_rozdzielający = zbiór[0]
+        a = list() # większe
+        b = list() # równe
+        c = list() # mniejsze
+        for element in zbiór:
+            if element < element_rozdzielający:
+                a.append(element)
+            elif element > element_rozdzielający:
+                c.append(element)
+            else:
+                b.append(element)
+        a = quicksort(a)
+        c = quicksort(c)
+        return a + b + c
+        
+    \end{minted}
 \end{document}

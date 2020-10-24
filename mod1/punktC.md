@@ -19,21 +19,22 @@
 ```python
 def quicksort(zbiór):
     if len(zbiór) <= 1:
+        # nie trzeba sortować zbiorów pustych oraz jednoelementowych
         return zbiór
     else:
         element_rozdzielający = zbiór[0]
-        A = list()
-        B = list()
-        divs = list() # jeśli się powtażają
+        a = list() # większe
+        b = list() # równe
+        c = list() # mniejsze
         for element in zbiór:
             if element < element_rozdzielający:
-                A.append(element)
+                a.append(element)
             elif element > element_rozdzielający:
-                B.append(element)
+                c.append(element)
             else:
-                divs.append(element)
-        A = quicksort(A)
-        B = quicksort(B)
-        return A + divs + B
+                b.append(element)
+        a = quicksort(a)
+        c = quicksort(c)
+        return a + b + c
 ```
 

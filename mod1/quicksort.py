@@ -1,6 +1,6 @@
 def quicksort(zbiór):
     if len(zbiór) <= 1:
-        return zbiór
+        return zbiór, None
     else:
         element_rozdzielający = zbiór[0]
         A = list()
@@ -13,8 +13,15 @@ def quicksort(zbiór):
                 B.append(element)
             else:
                 divs.append(element)
-        A = quicksort(A)
-        B = quicksort(B)
-        return A + divs + B
+        Anew, msgA = quicksort(A)
+        Bnew, msgB = quicksort(B)
+        msg = {
+                "div" : element_rozdzielający,
+                "A" : A,
+                "B" : B,
+                "msgA" :  msgA,
+                "msgB" :  msgB
+                }
+        return Anew + divs + Bnew, msg
 
-print(quicksort("ok, Boomer"))
+print(quicksort("ok, Boomer")[1])
