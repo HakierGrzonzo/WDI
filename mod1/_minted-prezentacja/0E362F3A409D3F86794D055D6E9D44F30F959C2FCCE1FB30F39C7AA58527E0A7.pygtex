@@ -1,0 +1,21 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{quicksort}\PYG{p}{(}\PYG{n}{zbiór}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{zbiór}\PYG{p}{)} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1}\PYG{p}{:}
+        \PYG{c+c1}{\PYGZsh{} nie trzeba sortować zbiorów pustych}
+        \PYG{k}{return} \PYG{n}{zbiór}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{n}{element\PYGZus{}rozdzielający} \PYG{o}{=} \PYG{n}{zbiór}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{c+c1}{\PYGZsh{} ostatni element}
+        \PYG{n}{a} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{()} \PYG{c+c1}{\PYGZsh{} większe}
+        \PYG{n}{b} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{()} \PYG{c+c1}{\PYGZsh{} równe}
+        \PYG{n}{c} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{()} \PYG{c+c1}{\PYGZsh{} mniejsze}
+        \PYG{k}{for} \PYG{n}{element} \PYG{o+ow}{in} \PYG{n}{zbiór}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n}{element} \PYG{o}{\PYGZlt{}} \PYG{n}{element\PYGZus{}rozdzielający}\PYG{p}{:}
+                \PYG{n}{a}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{element}\PYG{p}{)}
+            \PYG{k}{elif} \PYG{n}{element} \PYG{o}{\PYGZgt{}} \PYG{n}{element\PYGZus{}rozdzielający}\PYG{p}{:}
+                \PYG{n}{c}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{element}\PYG{p}{)}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{n}{b}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{element}\PYG{p}{)}
+        \PYG{n}{a} \PYG{o}{=} \PYG{n}{quicksort}\PYG{p}{(}\PYG{n}{a}\PYG{p}{)}
+        \PYG{n}{c} \PYG{o}{=} \PYG{n}{quicksort}\PYG{p}{(}\PYG{n}{c}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{a} \PYG{o}{+} \PYG{n}{b} \PYG{o}{+} \PYG{n}{c}
+\end{Verbatim}
