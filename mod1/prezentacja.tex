@@ -35,52 +35,52 @@
     \date{\today}
 
 \begin{document}
-    \begin{frame}
-        \titlepage
-    \end{frame}
-    \section{Czym jest algorytm?}
-    \begin{frame}
-        \frametitle{Czym jest algorytm?}
-        \begin{block}{Definicja}
-            \emph{Algorytm} to zestaw instrukcji opisujących krok po kroku jak wykonać pewne zadanie.   
-        \end{block}
-        Mamy z nimi do czynienia w codziennym życiu wykonując różne czynności według pewnych schematów. Przykładowo gdy gotujemy i podążamy za pewnym przepisem.
+\begin{frame}
+    \titlepage
+\end{frame}
+\section{Czym jest algorytm?}
+\begin{frame}
+    \frametitle{Czym jest algorytm?}
+    \begin{block}{Definicja}
+        \emph{Algorytm} to zestaw instrukcji opisujących krok po kroku jak wykonać pewne zadanie.
+    \end{block}
+    Mamy z nimi do czynienia w codziennym życiu wykonując różne czynności według pewnych schematów. Przykładowo gdy gotujemy i podążamy za pewnym przepisem.
 
-        Algorytmy odgrywają niezwykle ważną rolę w informatyce. Są one potrzebne do optymalizacji oprogramowania, tak aby działało jak najefektywniej. Specyficznnym rodzajem algorytmów są algorytmy rekurencyjne. 
+    Algorytmy odgrywają niezwykle ważną rolę w informatyce. Są one potrzebne do optymalizacji oprogramowania, tak aby działało jak najefektywniej. Specyficznnym rodzajem algorytmów są algorytmy rekurencyjne.
 
-        \begin{block}{Definicja}
-            \emph{Rekurencja} polega na odwołaniu się funkcji do samej siebie.
-        \end{block}
-    \end{frame}
-    \section{Wyszukiwanie binarne}
-    \begin{frame}
-        \frametitle{Wyszukiwanie binarne:}
-        \emph{Wyszukiwanie binarne} - algorytm stosowany do wyszukiwania
-        elementów w posegregowanych zbiorach.
-        
-        Cechuje się złożonością czasową $O \left(\log_2 n \right)$, podczas gdy wyszukiwanie liniowe (element po elemencie), ma złożoność $O \left( n \right)$.
+    \begin{block}{Definicja}
+        \emph{Rekurencja} polega na odwołaniu się funkcji do samej siebie.
+    \end{block}
+\end{frame}
+\section{Wyszukiwanie binarne}
+\begin{frame}
+    \frametitle{Wyszukiwanie binarne:}
+    \emph{Wyszukiwanie binarne} - algorytm stosowany do wyszukiwania
+    elementów w posegregowanych zbiorach.
 
-        \begin{block}{Definicja}
-            Złożoność czasowa - Jak długo zajmuje wykonanie algorytmu w zależności od wielkości wejścia $\left(n\right)$
-        \end{block}
-    \end{frame}
-    \begin{frame}
-        \frametitle{Zasada działania}
-        Główną ideą wyszukiwania binarnego jest podział elementów w przeszukiwanym uporządkowanym zbiorze danych
-        (np. tablicy) na coraz to mniejsze zbiory, tak by optymalnie ograniczyć zakres poszukiwania.
-        %Należy zaznaczyć, że elementy muszą być ze sobą \emph{porównywalne}, tzn. spośrod dowolnych dwóch elementów
-        %da się wyłonić większy i mniejszy (ew.~równy), np. po wartości lub nazwie.
+    Cechuje się złożonością czasową $O \left(\log_2 n \right)$, podczas gdy wyszukiwanie liniowe (element po elemencie), ma złożoność $O \left( n \right)$.
 
-        \begin{enumerate}
-            \item gdy środkowy element jest mniejszy od szukanej, za dolną granicę uznaje się kolejny element, a górna pozostaje bez zmian
-            \item gdy środkowy element jest większy od szukanej, za górną granicę uznaje się poprzedni element,
-            a dolna pozostaje bez zmian
-        \end{enumerate}
+    \begin{block}{Definicja}
+        Złożoność czasowa - Jak długo zajmuje wykonanie algorytmu w zależności od wielkości wejścia $\left(n\right)$
+    \end{block}
+\end{frame}
+\begin{frame}
+    \frametitle{Zasada działania}
+    Główną ideą wyszukiwania binarnego jest podział elementów w przeszukiwanym uporządkowanym zbiorze danych
+    (np. tablicy) na coraz to mniejsze zbiory, tak by optymalnie ograniczyć zakres poszukiwania.
+    %Należy zaznaczyć, że elementy muszą być ze sobą \emph{porównywalne}, tzn. spośrod dowolnych dwóch elementów
+    %da się wyłonić większy i mniejszy (ew.~równy), np. po wartości lub nazwie.
 
-        Następnie powyższe kroki zostają powtórzone. Jeżeli element nie zostanie znaleziony,
-        zwracana jest odpowiednia wartość wskazująca na błąd (np. $-1$ lub $null$).
-    \end{frame}
-    \begin{minted}[fontsize=\small]{python}
+    \begin{enumerate}
+        \item gdy środkowy element jest mniejszy od szukanej, za dolną granicę uznaje się kolejny element, a górna pozostaje bez zmian
+        \item gdy środkowy element jest większy od szukanej, za górną granicę uznaje się poprzedni element,
+              a dolna pozostaje bez zmian
+    \end{enumerate}
+
+    Następnie powyższe kroki zostają powtórzone. Jeżeli element nie zostanie znaleziony,
+    zwracana jest odpowiednia wartość wskazująca na błąd (np. $-1$ lub $null$).
+\end{frame}
+\begin{minted}[fontsize=\small]{python}
 # searches for specified item in chosen collection
 def binary_search(item, collection):
     lower_bound = 0
@@ -101,26 +101,26 @@ def binary_search(item, collection):
     raise Exception("not found")
     \end{minted}
 
-    \begin{frame}
-        \frametitle{Przykład:}
-        \obrazek{.5}{binarySearchExample.png}
-    \end{frame}
+\begin{frame}
+    \frametitle{Przykład:}
+    \obrazek{.5}{binarySearchExample.png}
+\end{frame}
 
-    \section{Quicksort}
-    \begin{frame}
-        \frametitle{Quicksort:}
-            Quicksort to rekurencyjny algorytm sortujący, działający poprzez dzielenie początkowego zbioru na coraz mniejsze podzbiory. 
-            \vspace{5mm}
+\section{Quicksort}
+\begin{frame}
+    \frametitle{Quicksort:}
+    Quicksort to rekurencyjny algorytm sortujący, działający poprzez dzielenie początkowego zbioru na coraz mniejsze podzbiory.
+    \vspace{5mm}
 
-            Działanie:
-            \begin{enumerate}
-                \item Wybierz element z \emph{danego zbioru}, zwany \emph{elementem rozdzielajączym.}
-                \item Elementy mniejsze od \emph{elementu rozdzielającego} przenieś do zbioru $A$, większe do $C$, a równe do $B$.
-                \item Posortuj zbiory $A$ i $C$ quicksortem.
-                \item Wynikiem jest połączenie zbiorów $A + B + C$.
-            \end{enumerate}
-    \end{frame}
-    \begin{minted}[fontsize=\small]{python}
+    Działanie:
+    \begin{enumerate}
+        \item Wybierz element z \emph{danego zbioru}, zwany \emph{elementem rozdzielajączym.}
+        \item Elementy mniejsze od \emph{elementu rozdzielającego} przenieś do zbioru $A$, większe do $C$, a równe do $B$.
+        \item Posortuj zbiory $A$ i $C$ quicksortem.
+        \item Wynikiem jest połączenie zbiorów $A + B + C$.
+    \end{enumerate}
+\end{frame}
+\begin{minted}[fontsize=\small]{python}
 def quicksort(zbiór):
     if len(zbiór) <= 1:
         # nie trzeba sortować zbiorów pustych 
@@ -143,15 +143,15 @@ def quicksort(zbiór):
         
     \end{minted}
 
-    \begin{frame}
-        \frametitle{Przykład:}
-        \obrazek{.5}{quicksortExample.png}
-    \end{frame}
+\begin{frame}
+    \frametitle{Przykład:}
+    \obrazek{.5}{quicksortExample.png}
+\end{frame}
 
-    \begin{frame}
-        \frametitle{Koniec}
-        \begin{center}
-            Dziękujemy za uwagę!
-        \end{center}
-    \end{frame}
+\begin{frame}
+    \frametitle{Koniec}
+    \begin{center}
+        Dziękujemy za uwagę!
+    \end{center}
+\end{frame}
 \end{document}
