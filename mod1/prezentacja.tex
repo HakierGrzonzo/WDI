@@ -127,9 +127,9 @@ def quicksort(zbiór):
         return zbiór
     else:
         element_rozdzielający = zbiór[-1] # ostatni element
-        a = list() # większe
+        a = list() # mniejsze
         b = list() # równe
-        c = list() # mniejsze
+        c = list() # większe
         for element in zbiór:
             if element < element_rozdzielający:
                 a.append(element)

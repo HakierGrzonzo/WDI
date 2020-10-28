@@ -5,9 +5,9 @@
         \PYG{k}{return} \PYG{n}{zbiór}
     \PYG{k}{else}\PYG{p}{:}
         \PYG{n}{element\PYGZus{}rozdzielający} \PYG{o}{=} \PYG{n}{zbiór}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{c+c1}{\PYGZsh{} ostatni element}
-        \PYG{n}{a} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{()} \PYG{c+c1}{\PYGZsh{} większe}
+        \PYG{n}{a} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{()} \PYG{c+c1}{\PYGZsh{} mniejsze}
         \PYG{n}{b} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{()} \PYG{c+c1}{\PYGZsh{} równe}
-        \PYG{n}{c} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{()} \PYG{c+c1}{\PYGZsh{} mniejsze}
+        \PYG{n}{c} \PYG{o}{=} \PYG{n+nb}{list}\PYG{p}{()} \PYG{c+c1}{\PYGZsh{} większe}
         \PYG{k}{for} \PYG{n}{element} \PYG{o+ow}{in} \PYG{n}{zbiór}\PYG{p}{:}
             \PYG{k}{if} \PYG{n}{element} \PYG{o}{\PYGZlt{}} \PYG{n}{element\PYGZus{}rozdzielający}\PYG{p}{:}
                 \PYG{n}{a}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{element}\PYG{p}{)}
