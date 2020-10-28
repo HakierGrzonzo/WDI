@@ -42,16 +42,37 @@
 \section{Czym jest algorytm?}
 \begin{frame}
     \frametitle{Czym jest algorytm?}
+    
     \begin{block}{Definicja}
         \emph{Algorytm} to zestaw instrukcji opisujących krok po kroku jak wykonać pewne zadanie.
     \end{block}
-    Mamy z nimi do czynienia w codziennym życiu wykonując różne czynności według pewnych schematów. Przykładowo gdy gotujemy i podążamy za pewnym przepisem.
+    
+   Z algorytmami mamy do czynienia w codziennym życiu wykonując różne czynności według pewnych schematów. Przykładowo gdy gotujemy i podążamy za jakimś przepisem.
+   
+   Algorytmy można przedstawiać w różny sposób, najczęściej przedstawiane są w formie listy kroków lub schematu blokowego.
+\end{frame}
 
-    Algorytmy odgrywają niezwykle ważną rolę w informatyce. Są one potrzebne do optymalizacji oprogramowania, tak aby działało jak najefektywniej. Specyficznym rodzajem algorytmów są algorytmy rekurencyjne.
-
-    \begin{block}{Definicja}
-        \emph{Rekurencja} polega na odwołaniu się funkcji do samej siebie.
+\section{Czym jest algorytm?}
+\begin{frame}
+     \frametitle{Przykład}
+     
+    \obrazek{.5}{lista-i-schemat.jpg}
     \end{block}
+    
+\end{frame}
+
+\section{Czym jest algorytm?}
+\begin{frame}
+     \frametitle{Algorytmy w informatyce}
+
+    Algorytmy odgrywają niezwykle ważną rolę w informatyce. Aby oprogramowanie działało najefektywniej, konieczne jest wybranie algorytmu o jak najmniejszej złożoności czasowej. 
+    
+     \begin{block}{Definicja}
+        Złożoność czasowa - Jak długo zajmuje wykonanie algorytmu w zależności od wielkości wejścia $\left(n\right)$
+    \end{block}
+    
+	Dobrym przykładem jest algorytm wyszukiwania binarnego, którego czas wykonania może być znacznie krótszy od algorytmu prostego wyszukiwania, szczególnie w przypadku dużych zbiorów.
+
 \end{frame}
 
 \section{Wyszukiwanie binarne}
@@ -62,9 +83,7 @@
 
     Cechuje się złożonością czasową $O \left(\log_2 n \right)$, podczas gdy wyszukiwanie liniowe (element po elemencie), ma złożoność $O \left( n \right)$.
 
-    \begin{block}{Definicja}
-        Złożoność czasowa - Jak długo zajmuje wykonanie algorytmu w zależności od wielkości wejścia $\left(n\right)$
-    \end{block}
+   
 \end{frame}
 
 \begin{frame}
