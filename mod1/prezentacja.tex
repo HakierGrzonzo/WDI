@@ -38,6 +38,7 @@
 \begin{frame}
     \titlepage
 \end{frame}
+
 \section{Czym jest algorytm?}
 \begin{frame}
     \frametitle{Czym jest algorytm?}
@@ -46,12 +47,13 @@
     \end{block}
     Mamy z nimi do czynienia w codziennym życiu wykonując różne czynności według pewnych schematów. Przykładowo gdy gotujemy i podążamy za pewnym przepisem.
 
-    Algorytmy odgrywają niezwykle ważną rolę w informatyce. Są one potrzebne do optymalizacji oprogramowania, tak aby działało jak najefektywniej. Specyficznnym rodzajem algorytmów są algorytmy rekurencyjne.
+    Algorytmy odgrywają niezwykle ważną rolę w informatyce. Są one potrzebne do optymalizacji oprogramowania, tak aby działało jak najefektywniej. Specyficznym rodzajem algorytmów są algorytmy rekurencyjne.
 
     \begin{block}{Definicja}
         \emph{Rekurencja} polega na odwołaniu się funkcji do samej siebie.
     \end{block}
 \end{frame}
+
 \section{Wyszukiwanie binarne}
 \begin{frame}
     \frametitle{Wyszukiwanie binarne:}
@@ -64,11 +66,12 @@
         Złożoność czasowa - Jak długo zajmuje wykonanie algorytmu w zależności od wielkości wejścia $\left(n\right)$
     \end{block}
 \end{frame}
+
 \begin{frame}
     \frametitle{Zasada działania}
     Główną ideą wyszukiwania binarnego jest podział elementów w przeszukiwanym uporządkowanym zbiorze danych
     (np. tablicy) na coraz to mniejsze zbiory, tak by optymalnie ograniczyć zakres poszukiwania.
-    %Należy zaznaczyć, że elementy muszą być ze sobą \emph{porównywalne}, tzn. spośrod dowolnych dwóch elementów
+    %Należy zaznaczyć, że elementy muszą być ze sobą \emph{porównywalne}, tzn. spośród dowolnych dwóch elementów
     %da się wyłonić większy i mniejszy (ew.~równy), np. po wartości lub nazwie.
 
     \begin{enumerate}
@@ -80,9 +83,10 @@
     Następnie powyższe kroki zostają powtórzone. Jeżeli element nie zostanie znaleziony,
     zwracana jest odpowiednia wartość wskazująca na błąd (np. $-1$ lub $null$).
 \end{frame}
+
 \begin{minted}[fontsize=\small]{python}
-# searches for specified item in chosen collection
 def binary_search(item, collection):
+"""searches for specified item in chosen collection"""
     lower_bound = 0
     upper_bound = len(collection) - 1
 
@@ -99,7 +103,7 @@ def binary_search(item, collection):
 
     # if item not found
     raise Exception("not found")
-    \end{minted}
+\end{minted}
 
 \begin{frame}
     \frametitle{Przykład:}
@@ -114,12 +118,13 @@ def binary_search(item, collection):
 
     Działanie:
     \begin{enumerate}
-        \item Wybierz element z \emph{danego zbioru}, zwany \emph{elementem rozdzielajączym.}
+        \item Wybierz element z \emph{danego zbioru}, zwany \emph{elementem rozdzielającym.}
         \item Elementy mniejsze od \emph{elementu rozdzielającego} przenieś do zbioru $A$, większe do $C$, a równe do $B$.
         \item Posortuj zbiory $A$ i $C$ quicksortem.
         \item Wynikiem jest połączenie zbiorów $A + B + C$.
     \end{enumerate}
 \end{frame}
+
 \begin{minted}[fontsize=\small]{python}
 def quicksort(zbiór):
     if len(zbiór) <= 1:
@@ -140,8 +145,7 @@ def quicksort(zbiór):
         a = quicksort(a)
         c = quicksort(c)
         return a + b + c
-        
-    \end{minted}
+\end{minted}
 
 \begin{frame}
     \frametitle{Przykład:}
