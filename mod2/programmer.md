@@ -8,6 +8,6 @@
 - monitory: jakieś 24 calowe FHD/1440p x 2
 - mikrofon: jakaś kamerka za 100zł do pracy zdalnej
 - programy:
-  - OS: Manjaro Linux KDE
+  - OS: Manjaro Linux KDE / Arch Linux z bspwm / Windows
   - Visual Studio Code
   - docker
