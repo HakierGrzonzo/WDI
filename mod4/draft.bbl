@@ -1,0 +1,21 @@
+\begin{thebibliography}{HBB17}
+
+\bibitem[HBB17]{hightower2017kubernetes}
+K.~Hightower, B.~Burns, and J.~Beda.
+\newblock {\em Kubernetes: Up and Running: Dive into the Future of
+  Infrastructure}.
+\newblock O'Reilly Media, 2017.
+
+\bibitem[inca]{docker-compose:docs}
+Docker inc.
+\newblock Dokumentacja docker-compse, wersja druga.
+\newblock \url{https://docs.docker.com/compose/compose-file/compose-file-v2/}.
+\newblock Dostęp: 2021-01-02.
+
+\bibitem[incb]{dockerfile:docs}
+Docker inc.
+\newblock Dokumentacja dockerfile.
+\newblock \url{https://docs.docker.com/engine/reference/builder/}.
+\newblock Dostęp: 2021-01-02.
+
+\end{thebibliography}

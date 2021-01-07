@@ -1,0 +1,311 @@
+% !TEX program = xelatex
+%Wzór dokumentu
+%tu zmień marginesy i rozmiar czcionki
+\documentclass[a4paper,12pt]{article}
+\usepackage{inputenc}[utf8]
+\usepackage[margin=2.8cm]{geometry}
+\usepackage[polish]{babel}
+
+%Lepiej tego nie zmieniaj, jak co to dodawaj pakiety
+\usepackage{titlesec}
+\usepackage{titling}
+\usepackage{fancyhdr}
+\usepackage{mdframed}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{float}
+
+
+
+%inny wygląd
+%\usepackage{tgbonum}
+
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+\urlstyle{same}
+%Zmienne, zmień je!
+\graphicspath{ {./ilustracje/} }
+\title{Tworzenie i uruchamianie prostych kontenerów w środowisku  docker-compose}
+\author{Grzegorz Koperwas}
+\date{\today}
+
+%lokalizacja polska (odkomentuj jak piszesz po polsku)
+
+\usepackage{polski}
+\usepackage[polish]{babel} 
+\usepackage{indentfirst}
+\usepackage{icomma} 
+
+\brokenpenalty=1000
+\clubpenalty=1000
+\widowpenalty=1000    
+
+%nie odkometowuj wszystkiego, użyj mózgu
+%\renewcommand\thechapter{\arabic{chapter}.}
+\renewcommand\thesection{\arabic{section}.}
+\renewcommand\thesubsection{\arabic{section}.\arabic{subsection}.}
+\renewcommand\thesubsubsection{\arabic{subsubsection}.}
+
+%Makra
+
+\newcommand{\obrazek}[2]{
+\begin{figure}[h]]
+    \centering
+    \includegraphics[scale=#1]{#2}
+\end{figure}
+}     
+        
+
+\newcommand{\twierdzonko}[1]{
+    \begin{center}
+    \begin{mdframed}
+    #1
+    \end{mdframed}          
+    \end{center}
+} 
+
+\newcommand{\dwanajeden}[2]{
+\ensuremath \left( \begin{array}{c}
+    #1\\
+    #2
+\end{array} \right)
+}  
+
+\captionsetup[figure]{name=Załącznik}
+%Stopka i head (sekcja której nie powinno się zmieniać)
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+
+%Zmieniaj od tego miejsca
+\rfoot{\thepage}
+\lfoot{}
+\lhead{}
+\rhead{Ostatnia edycja: \today}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{1pt}
+
+\begin{document}
+\maketitle
+\thispagestyle{fancy}
+
+\begin{abstract}
+    W tej pracy zostaną pokazane absolutne podstawy pisania plików \texttt{dockerfile} oraz uruchamiania tych kontenerów w środowisku \texttt{docker-compose} na serwerze z systemem \emph{GNU/Linux}. Autor zakłada iż czytelnik posiada zainstalowanego \texttt{docker}'a oraz \texttt{docker-compose} w miarę aktualnych wersjach.
+\end{abstract}
+
+
+\section{Jak działają obrazy aplikacji?}
+\nocite{hightower2017kubernetes}
+By uruchomić daną aplikację w środowisku \texttt{docker}'a musimy utworzyć jej obraz. \texttt{Docker} tworzy swoje obrazy według instrukcji w pliku zwanym \texttt{dockerfile}, możemy o nich myśleć jako instrukcjach które znajdują się na wielu repozytoriach na \emph{Github'ie} mówiących jakie biblioteki są potrzebne do kompilacji oraz jak kompilować i instalować dany program, czasami nawet zawierają one informacje dla poszczególnych dystrybucji.
+
+Na potrzeby tej pracy będziemy chcieli stworzyć obraz z kompilatorem sieciowym \emph{distcc\footnote{\url{https://distcc.github.io/}}}.
+
+Pierwszym krokiem do stworzenia jakiegoś obrazu aplikacji musimy wybrać obraz \emph{bazowy}. Docker posiada swoją platformę \emph{Docker Hub} na której możemy szukać właśnie interesujących nas obrazów, które mają formę od gotowych do pracy dystrybucji linuxa (alpine, arch czy debian) do gotowych obrazów popularnych aplikacji wraz z sterownikami graficznymi\footnote{Na przykład \texttt{\href{https://hub.docker.com/r/jrottenberg/ffmpeg/}{jrottenberg/ffmpeg:4.1-nvidia}} zawiera debian'a z programem ffmpeg skonfigurowanym tak by wykorzystywał akceleracje wideo kart firmy \emph{nvidia}.}.
+
+My będziemy wykorzystywali obraz \texttt{\href{https://hub.docker.com/_/archlinux/}{archlinux:latest}}, nie dlatego że jest to najlepszy wybór, ale dlatego iż możemy łatwo go skonfigurować. Warto tu jeszcze powiedzieć o \emph{tagach} (ta część po ,,:''), w naszym przypadku używamy taga \emph{latest}, czyli najnowszej wersji obrazu, jednak w wypadku innych obrazów należy sumiennie przeczytać dokumentację w celu wyboru właściwego.
+
+\subsection*{Co napisać w pliku \texttt{dockerfile}?}
+
+\begin{figure}[p]
+    \begin{lstlisting}[frame=L,basicstyle=\footnotesize\ttfamily,numbers=left,
+        morekeywords={FROM,RUN,EXPOSE,ENTRYPOINT}]
+FROM archlinux:latest
+RUN pacman -Syu --noconfirm distcc make git gcc cmake
+EXPOSE 3632/tcp
+EXPOSE 3632/udp
+ENTRYPOINT distccd --daemon --no-detach --verbose --allow-private
+    \end{lstlisting}
+    \caption{Dockerfile tworzący nasz obraz z programem \emph{distcc}}
+    \label{dockerfile-comp}
+\end{figure}
+
+Całość zawartości pliku dockerfile jest przedstawiona w załączniku \ref{dockerfile-comp}, omówmy zatem co się dzieje w każdej linijce jego zawartości.
+
+\subsubsection{Polecnie \texttt{FROM}}
+
+Polecenie \texttt{FROM} mówi \emph{docker}'owi z jakiego obrazu ma on stwożyć nasz obraz, czyli definiujemy obraz bazowy. Widzimy iż przekazujemy mu nazwę obrazu \texttt{archlinux:latest}, jeśli nie mamy jej jeszcze na swoim komputerze to \emph{docker} pobierze ją z \emph{docker hub}'a
+
+\subsubsection{Polecenie \texttt{RUN}}
+
+Polecenie \texttt{RUN} pozwala nam uruchomić dane polecenie w kontenerze (\emph{docker} uruchomi obraz, wykona polecenie, zapisze obraz). Często używamy go do instalowania jakiś zależności lub jak tutaj, aplikacji którą chcemy ,,skonteneryzować''.
+
+Polecenie \texttt{pacman -Syu --noconfirm distcc}[\dots]\texttt{cmake} aktualizuje wszystkie pakiety oraz instaluje pakiety distcc, make, git, gcc i cmake bez pytania się użytkownika o potwierdzenie (\texttt{--noconfirm})
+\vspace{5mm}
+\begin{center}
+    \begin{minipage}{14cm}
+        \twierdzonko{
+            \begin{center}
+                \large{Ważne!}
+            \end{center}
+            \begin{enumerate}
+                \item Docker uruchamia wszystkie polecenia w kontenerach jako \texttt{root}
+                \item Docker by zwiększyć prędkość tworzenia obrazów zapisuje je do cache po każdym kroku, zatem warto je łączyć (patrz załącznik \ref{run-connect})
+            \end{enumerate}
+        }
+    \end{minipage}
+\end{center}
+
+\begin{figure}[p]
+    \begin{center}
+        \begin{minipage}{4cm}
+            Zamiast:
+            \begin{lstlisting}[frame=L,basicstyle=\footnotesize\ttfamily,
+                morekeywords={RUN},numbers=left,firstnumber=2]
+RUN command1
+RUN command2
+            \end{lstlisting}
+        \end{minipage}
+        \hspace{5mm}
+        \begin{minipage}{4cm}
+            Lepiej:
+            \begin{lstlisting}[frame=L,basicstyle=\footnotesize\ttfamily,
+                morekeywords={RUN},numbers=left,firstnumber=2]
+RUN command1 && \
+    command2
+            \end{lstlisting}
+        \end{minipage}
+    \end{center}
+    \vspace{-7mm}
+    \caption{Lepiej wiele poleceń dać do jednego \emph{RUN'a}}
+    \label{run-connect}
+\end{figure}
+
+\subsubsection{Polecenia \texttt{EXPOSE}}
+
+Polecenie \texttt{EXPOSE} pozwala nam otworzyć dane porty w kontenerze dla danych protokołów. Na przykład \texttt{EXPOSE 3632/tcp} otwiera port \emph{distcc} dla protokołu tcp, a \texttt{EXPOSE 3632/udp} dla protokołu udp.
+
+\subsubsection{Polecenie \texttt{ENTRYPOINT}}
+
+Poleceniem \texttt{ENTRYPOINT} definiujemy jaki program lub skrypt powinien zostać uruchomiony w kontenerze kiedy zaczyna on swoją pracę. Warto zaznaczyć że docker zakłada iż kontener skończył swoją pracę jeśli polecenie skończy się wykonywać, dlatego dodajemy opcję \texttt{--no-detach} do polecenia uruchamiającego daemona \emph{distccd}.
+
+Opcja \texttt{--allow-private} udostępnia kompilację dla wszystkich klientów w sieci lokalnej.
+
+\subsubsection{Polecenie \texttt{COPY}}
+
+Warto również wspomnieć o poleceniu \texttt{COPY}, które nie jest wykorzystywane w naszym \texttt{dockerfile}'u ale jest przydatne jeśli chcemy przekopiować jakiś nasz lokalny plik do obrazu.
+
+Przykładowo w drugiej linijce załącznika \ref{dockerfile-portlister} kopiujemy folder z aplikacją \texttt{./app}\footnote{Ścieżka jest podana relatywnie do lokalizacji pliku \texttt{dockerfile}} do folderu \texttt{/app} w obrazie.
+
+\begin{figure}[p]
+    \begin{lstlisting}[frame=L,basicstyle=\footnotesize\ttfamily,numbers=left,
+        morekeywords={FROM,COPY,RUN}]
+FROM tiangolo/uwsgi-nginx-flask:python3.8
+COPY ./app /app
+RUN python3 -m pip install -r /app/requirements.txt
+    \end{lstlisting}
+    \caption{Dockerfile tworzący obraz mojej webowej aplikacji \emph{PortLister} w \texttt{flask}'u}
+
+    \label{dockerfile-portlister}
+\end{figure}
+
+\vspace{1cm}
+
+Istnieją również inne polecenia których możemy użyć w \texttt{dockerfile}, są one omówione w dokumentacji\cite{dockerfile:docs}.
+
+\subsection*{Budowanie obrazu z pliku \texttt{dockerfile}}
+
+Obraz budujemy za pomocą polecenia:
+
+\begin{figure}[H]
+    \begin{lstlisting}[frame=single,basicstyle=\footnotesize\ttfamily,language=bash,morekeywords={docker}]
+$ docker build -t $nazwaObrazu .
+    \end{lstlisting}
+\end{figure}
+
+Gdzie zamiast \texttt{\$nazwaObrazu} wpisujemy nazwę dla naszego obrazu.
+
+\section{Uruchamianie obrazów w środowisku \texttt{docker-compose}}
+
+\texttt{Docker-compose} jest alternatywą dla zwykłego uruchamiania kontenerów poprzez polecenia \texttt{docker run} gdzie bardzo szybko mogą nam powstać takie cuda:
+
+\begin{figure}[H]
+    \begin{lstlisting}[frame=single,basicstyle=\footnotesize\ttfamily,morekeywords={docker,\\},numbers=left]
+# docker run \
+    --gpus all \
+    --network "host" \
+    --device /dev/ttyUSB0:/dev/tty2 \
+    --volume /dockerStuff/rtsp/data:/rtsp/data \
+    rtsp_over_serial:latest
+    \end{lstlisting}
+\end{figure}
+
+Zapamiętanie takich monstrów\footnote{Przedstawiony przykład i tak jest rozmiaru ,,średniego''} na rzecz późniejszej edycji możemy jedynie powierzyć historii konsoli. Dlatego możemy używać środowiska \texttt{docker-compose} w celu uruchamiania kontenerów za pomocą ustawień w pliku \texttt{docker-compose.yml}. Plik ten używa formatu \emph{YAML}.
+
+Plik dla naszego obrazu znajduje się w załączniku \ref{dockercompose}, omówmy sobie jego zawartość.
+
+\subsection*{Tworzenie plilku \texttt{docker-compose.yml}}
+
+W pliku \texttt{docker-compose.yml} pod kluczem ,,services'' umieszczamy klucze z nazwami jakie chcemy nadać naszym kontenerom. Nasz kontener z kompilatorem \emph{distcc} nazywamy oczywiście distcc.
+
+\subsubsection{Klucz \texttt{image}}
+
+W tym kluczu umieszczamy nazwę naszego obrazu, w naszym wypadku jest to ,,distcc'' wraz z tagiem ,,latest'', który wybiera najnowszą wersję.
+
+\subsubsection{Klucz \texttt{restart}}
+
+Klucz \texttt{restart} pozwala nam przekazać środowisku \texttt{docker-compose} co ma się dziać po zakończeniu pracy kontenera lub przy restartowaniu serwera. Dostępnych mamy parę opcji:
+\begin{itemize}
+    \item \emph{always} - kontener jest zawsze uruchamiany ponownie. Dlatego wybieramy go dla naszego kontenera.
+    \item \emph{on-failure} - nie restartuje kontenera jeśli zwróci on 0.
+    \item \emph{no} - nie restartuje kontenera nigdy - domyślny.
+\end{itemize}
+
+\subsubsection{Klucz \texttt{ports}}
+
+Pod tym kluczem możemy udostępniać porty z kontenera, w formie \texttt{<port hosta>:<port kontenera>}.
+
+\vspace{1cm}
+
+Istnieje o wiele więcej kluczy których możemy używać, ich opis możemy łatwo znaleźć w dokumentacji \texttt{docker-compose}\cite{docker-compose:docs}.
+
+\subsection*{Uruchamianie kontenera}
+
+By uruchomić kontener wystarczy polecenie:
+
+\begin{figure}[H]
+    \begin{lstlisting}[frame=single,basicstyle=\footnotesize\ttfamily,language=bash,morekeywords={docker-compose}]
+$ docker-compose up -d
+    \end{lstlisting}
+\end{figure}
+
+Gdzie opcja \texttt{-d} odłącza proces od konsoli.
+
+\subsubsection*{Bonusowy one-liner}
+By wyświetlać logi na bieżąco polecam polecenie:
+\begin{figure}[H]
+    \begin{lstlisting}[frame=single,basicstyle=\footnotesize\ttfamily,language=bash,morekeywords={tail,docker-compose,watch}]
+$ watch --color "docker-compose logs | tail -n 20"
+    \end{lstlisting}
+\end{figure}
+
+
+\begin{figure}[p]
+    \begin{lstlisting}[frame=L,basicstyle=\footnotesize\ttfamily,numbers=left,
+        morekeywords={version,services,image,ports,restart}]
+version: '3.3'
+
+services:
+        distcc:
+                image: distcc:latest
+                restart: always
+                ports:
+                        - "3632:3632"
+    \end{lstlisting}
+    \caption{Plik \texttt{docker-compose.yml} dla naszego obrazu z \emph{distcc}}
+    \label{dockercompose}
+\end{figure}
+
+\bibliographystyle{alpha}
+\bibliography{draft}
+\end{document}
