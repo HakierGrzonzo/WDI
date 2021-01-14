@@ -1,0 +1,289 @@
+\documentclass{beamer}
+
+\usepackage{inputenc}[utf8]
+\usepackage[polish]{babel}
+
+%Lepiej tego nie zmieniaj, jak co to dodawaj pakiety
+\usepackage{fancyhdr}
+\usepackage{mdframed}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=false,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+%\apptocmd{\frame}{}{\justifying}{} % Allow optional arguments after frame.
+
+\urlstyle{same}
+%Zmienne, zmień je!
+\graphicspath{ {./ilustracje/} }
+\title[docker oraz docker-compose 101]{Tworzenie i uruchamianie prostych kontenerów w środowisku  docker-compose}
+\author{Grzegorz Koperwas}
+\date{\today}
+
+%lokalizacja polska (odkomentuj jak piszesz po polsku)
+
+\usepackage{polski}
+\usepackage[polish]{babel} 
+\usepackage{indentfirst}
+\usepackage{icomma} 
+\usetheme{Warsaw}
+
+\brokenpenalty=1000
+\clubpenalty=1000
+\widowpenalty=1000    
+
+%nie odkometowuj wszystkiego, użyj mózgu
+%\renewcommand\thechapter{\arabic{chapter}.}
+\renewcommand\thesection{\arabic{section}.}
+\renewcommand\thesubsection{\arabic{section}.\arabic{subsection}.}
+\renewcommand\thesubsubsection{\arabic{subsubsection}.}
+
+%Makra
+
+\newcommand{\obrazek}[2]{
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=#1]{#2}
+\end{figure}
+}     
+        
+
+\newcommand{\twierdzonko}[1]{
+    \begin{center}
+    \begin{mdframed}
+    #1
+    \end{mdframed}          
+    \end{center}
+} 
+
+\newcommand{\dwanajeden}[2]{
+\ensuremath \left( \begin{array}{c}
+    #1\\
+    #2
+\end{array} \right)
+}  
+
+\captionsetup[figure]{name=Załącznik}
+\begin{document}
+\begin{frame}
+    \titlepage
+\end{frame}
+\begin{frame}
+    \tableofcontents
+\end{frame}
+\section{docker 101}
+\subsection{Po co docker}
+\begin{frame}
+    \frametitle{Po co jest docker?}
+
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \texttt{Docker} znacząco ułatwia instalowanie i zarządzanie oprogramowaniem w systemach \emph{Linux}.
+            \pause
+            \begin{itemize}
+                \item Izoluje programy oraz ich zależności.
+                \pause
+                \item Łatwa instalacja programów spoza repozytoriów naszej dystrybucji.
+                \pause
+                \item Latwe zarządzanie obrazami aplikacji.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \pause
+            \begin{itemize}
+                \item Skalowalność dla wielu serwerów za pomocą \emph{Kubernetes}
+            \end{itemize}
+            \pause[0]
+            \obrazek{0.27}{docker-arch.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+\begin{frame}
+    \frametitle{Do czego nie jest docker}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            Docker ma oczywiście swoje wady:
+            \pause
+            \begin{itemize}
+                \item Nie jest tak szybki jak jego brak.
+                \pause
+                \item Trwałe przechowywanie danych jest \emph{ciekawe.}
+            \end{itemize}
+            \pause
+            Jeśli coś może być łatwo osiągnięte czymś takim jak \texttt{systemd}, to warto to tak zrobić.
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \obrazek{0.15}{systemD.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+\subsection{Po co obrazy aplikacji}
+\begin{frame}
+    \frametitle{Czym jest obraz aplikacji i plik dockerfile}
+    By uruchomić daną aplikację w środowisku \texttt{docker}'a musimy utworzyć jej obraz.
+    \pause
+
+    \hspace{5mm}
+
+        \texttt{Docker} tworzy swoje obrazy według instrukcji w pliku zwanym \texttt{dockerfile}.
+        
+    \pause
+    \hspace{5mm}
+
+        Możemy o nich myśleć jako instrukcjach które znajdują się na wielu repozytoriach na \emph{Github'ie} mówiących jakie biblioteki są potrzebne do kompilacji oraz jak kompilować i instalować dany program.
+\end{frame}
+\begin{frame}
+    Na potrzeby tej prezentacji będziemy chcieli stworzyć obraz z kompilatorem sieciowym \emph{distcc}.
+
+    \pause
+    \vspace{5mm}
+    Pierwszym krokiem do stworzenia jakiegoś obrazu aplikacji musimy wybrać obraz \emph{bazowy}.
+
+    \pause
+    \vspace{5mm}
+    My będziemy wykorzystywali obraz \texttt{\href{https://hub.docker.com/_/archlinux/}{archlinux:latest}}.
+    \pause
+    \begin{block}{Nazwy obrazów}
+        Nazwy obrazów są w formie:
+        \vspace{-3mm}
+        \begin{center}
+            \texttt{<autor>?/<nazwa>:tag}
+        \end{center}
+        Na przykład:
+        \vspace{-3mm}
+        \begin{center}
+            \href{https://hub.docker.com/r/jrottenberg/ffmpeg/}{\texttt{jrottenberg/ffmpeg:4.1-nvidia}}
+        \end{center}
+    \end{block}
+\end{frame}
+\subsection{Pliki dockerfile}
+\begin{frame}[fragile]
+    \frametitle{Plik Dockerfile}
+
+    \begin{figure}
+        \begin{lstlisting}[frame=L,basicstyle=\tiny\ttfamily,numbers=left,
+        morekeywords={FROM,RUN,EXPOSE,ENTRYPOINT}]
+FROM archlinux:latest
+RUN pacman -Syu --noconfirm distcc make git gcc cmake
+COPY ./dummy.txt /etc/dummy.txt
+EXPOSE 3632/tcp
+EXPOSE 3632/udp
+ENTRYPOINT distccd --daemon --no-detach --verbose --allow-private
+    \end{lstlisting}
+    \end{figure}
+    Plik \texttt{dockerfile składa się z takich instrukcji:}
+    \pause
+    \begin{description}
+        \item[FROM] Definiuje bazowy obraz
+    \pause
+        \item[RUN] Uruchamia komendę w kontenerze
+    \pause
+        \item[EXPOSE] Udostępnia porty w kontenerze
+    \pause
+        \item[COPY] Kopiuje plik/katalog \emph{A} z naszego komputera do katalogu \emph{B} w obrazie.
+    \end{description}
+\end{frame}
+\begin{frame}[fragile]
+    \frametitle{Plik Dockerfile}
+    Obraz budujemy za pomocą polecenia:
+
+    \begin{figure}[H]
+        \begin{lstlisting}[frame=single,basicstyle=\footnotesize\ttfamily,language=bash,morekeywords={docker}]
+$ docker build -t $nazwaObrazu .
+    \end{lstlisting}
+    \end{figure}
+
+    Gdzie zamiast \texttt{\$nazwaObrazu} wpisujemy nazwę dla naszego obrazu.
+\end{frame}
+
+\section{Uruchamianie w docker-compose}
+\begin{frame}[fragile]
+    \frametitle{Uruchamianie obrazów w środowisku \texttt{docker-compose}}
+    \begin{columns}
+        \begin{column}{0.4\textwidth}
+            Domyślnie \texttt{Docker} uruchamia obrazy poleceniami \texttt{docker~run}.
+    \pause
+
+            \vspace{5mm}
+
+            \texttt{docker-compose} ułatwia proces uruchamiania poprzez zastosowanie pliku \emph{YAML} z opcjami które normalnie byśmy wpisywali jako argumenty polecenia \texttt{docker~run}
+        \end{column}
+        \begin{column}{0.6\textwidth}
+    \pause[0]
+            \begin{figure}[H]
+                \begin{lstlisting}[frame=single,basicstyle=\scriptsize\ttfamily,morekeywords={docker}]
+# docker run \
+    --gpus all \
+    --network "host" \
+    --device /dev/ttyUSB0:/dev/tty2 \
+    --volume /bar/off/foo:/bar \
+    rtsp_over_serial:latest
+    \end{lstlisting}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\subsection{Plik docker-compose.yml}
+\begin{frame}[fragile]
+    \frametitle{Format pliku \texttt{docker-compose.yml}}
+    \begin{columns}
+        \begin{column}{0.45\textwidth}
+            \begin{lstlisting}[frame=L,basicstyle=\scriptsize\ttfamily,numbers=left,
+        morekeywords={version,services,image,ports,restart}]
+version: '3.3'
+
+services:
+    distcc:
+        image: distcc:latest
+        restart: always
+        ports:
+            - "3632:3632"
+    \end{lstlisting}
+            Plik jest w formacie \emph{YAML}, w formie \texttt{klucz~$\rightarrow$~wartość}
+    \pause
+
+            \vspace{3mm}
+
+            Pod kluczem \texttt{services} umieszczamy kontenery jakie będziemy uruchamiać.
+        \end{column}
+        \begin{column}{0.55\textwidth}
+    \pause
+            Kolejne klucze określają opcje dla kontenera (i z jakiego obrazu go stworzyć)
+
+            \small{
+                \begin{description}
+                    \item[image] Nazwa obrazu dla kontenera.
+    \pause
+                    \item[restart] Czy restartować kontener po jego zakończeniu.
+    \pause
+                    \item[ports] Konfiguracja forwardowania portów, w formie \texttt{<port hosta>:<port kontenera>}
+                \end{description}}
+        \end{column}
+    \end{columns}
+\end{frame}
+\subsection{Uruchamianie kontenerów za pomocą docker-compose}
+\begin{frame}[fragile]
+    \frametitle{Uruchamianie kontenerów komendą docker-compose}
+    By uruchomić kontener wystarczy polecenie:
+    \begin{lstlisting}[frame=single,basicstyle=\footnotesize\ttfamily,language=bash,morekeywords={docker-compose}]
+$ docker-compose up -d
+    \end{lstlisting}
+    Gdzie opcja \texttt{-d} odłącza proces od terminala.
+    \pause
+    \begin{block}{Bonus}
+        \texttt{Docker-compose} udostępnia nam też inne komendy takie jak \texttt{docker-compose logs} wypisującą logi na konsoli. Za pomocą takiego one-linera możemy sobie je wyświetlać na bieżąco:
+        \begin{center}\begin{minipage}{0.9\textwidth}
+        \begin{lstlisting}[frame=single,basicstyle=\scriptsize\ttfamily,morekeywords={tail,docker-compose,watch}]
+$ watch --color "docker-compose logs | tail -n 20"
+    \end{lstlisting}
+        \end{minipage}\end{center}
+    \end{block}
+\end{frame}
+\end{document}
