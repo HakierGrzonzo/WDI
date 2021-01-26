@@ -1,0 +1,15 @@
+\frametitle{Uruchamianie kontenerów komendą docker-compose}
+    By uruchomić kontener wystarczy polecenie:
+    \begin{lstlisting}[frame=single,basicstyle=\footnotesize\ttfamily,language=bash,morekeywords={docker-compose}]
+$ docker-compose up -d
+    \end{lstlisting}
+    Gdzie opcja \texttt{-d} odłącza proces od terminala.
+    \pause
+    \begin{block}{Bonus}
+        \texttt{Docker-compose} udostępnia nam też inne komendy takie jak \texttt{docker-compose logs} wypisującą logi na konsoli. Za pomocą takiego one-linera możemy sobie je wyświetlać na bieżąco:
+        \begin{center}\begin{minipage}{0.9\textwidth}
+        \begin{lstlisting}[frame=single,basicstyle=\scriptsize\ttfamily,morekeywords={tail,docker-compose,watch}]
+$ watch --color "docker-compose logs | tail -n 20"
+    \end{lstlisting}
+        \end{minipage}\end{center}
+    \end{block}
